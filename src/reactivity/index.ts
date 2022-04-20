@@ -1,6 +1,2 @@
-export function effect(fn: Function, option = {}) {
-  fn()
-}
-export function reactive(obj: Record<string, any>) {
-  return obj
-}
+export * from './effect'
+export * from './reactive'
