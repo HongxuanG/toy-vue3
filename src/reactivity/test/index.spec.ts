@@ -1,5 +1,5 @@
 import { setDataWithoutRepeat } from './setDataWithoutRepeat'
-describe('setDataWithoutRepeat test', () => {
+describe.skip('setDataWithoutRepeat test', () => {
   let context = {
     data: {
       test: {
