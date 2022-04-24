@@ -30,11 +30,14 @@ class ReactiveEffect {
   }
 }
 // 清除指定依赖
-function cleanupEffect(effect: ReactiveEffect){
-  if (effect.deps.length !== 0) {
-    for (let i = 0; i < effect.deps.length; i++) {
-      effect.deps[i].delete(effect)
+function cleanupEffect(effect: ReactiveEffect) {
+  // 对effect解构，解出deps，减少对象在词法环境寻找属性的次数
+  const {deps} = effect
+  if (deps.length !== 0) {
+    for (let i = 0; i < deps.length; i++) {
+      deps[i].delete(effect)
     }
+    deps.length = 0
   }
 }
 const targetMap = new Map<Record<EffectKey, any>, Map<EffectKey, Set<IDep>>>()
@@ -118,7 +121,7 @@ export function effect<T = any>(fn: () => T, option?: EffectOption): EffectRunne
   // 不用bind重新绑定this，this会指向undefined
   let runner = _effect.run.bind(_effect) as EffectRunner
   // 这里的effect挂载在了函数runner上，作为属性，这是利用了js中函数可以挂在属性的特性
-  // 之后呢，stop的runner就能拿到ReactiveEffect实例对象了
+  // 之后呢，实现stop的时候runner就能拿到ReactiveEffect实例对象了
   runner.effect = _effect
   return runner
 }
