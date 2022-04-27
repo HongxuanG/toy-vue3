@@ -17,6 +17,8 @@ describe('readonly', () => {
       username: 'ghx'
     }
     let readonlyObj = readonly(original)
-    expect(readonlyObj).toHaveBeenWarned()
+    const warn = jest.spyOn(console, 'warn')
+    readonlyObj.username = 'danaizi'
+    expect(warn).toHaveBeenCalled()
   })
 })

@@ -34,7 +34,7 @@ export const mutableHandlers: ProxyHandler<object> = {
 export const readonlyHandlers: ProxyHandler<object> = {
   get: readonlyGet,
   set(target, key, value) {
-    console.warn(`${target} do not set ${String(key)} value ${value}, because it is readonly`, target)
+    console.warn(`${target} do not set ${String(key)} value ${value}, because it is readonly`)
     return true
   },
 }
