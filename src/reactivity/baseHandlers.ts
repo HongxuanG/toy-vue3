@@ -6,7 +6,7 @@ const get = createGetter()
 const set = createSetter()
 const readonlyGet = createGetter(true)
 
-// 高阶函数，
+// 高阶函数
 export function createGetter<T extends object>(isReadonly = false) {
   return function get(target: T, key: string | symbol) {
     // isReactive和isReadonly 都是根据传入的参数 `isReadonly`来决定是否返回true | false的

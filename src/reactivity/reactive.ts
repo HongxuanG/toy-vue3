@@ -1,4 +1,3 @@
-import { isObject } from '../shared';
 import { createReactiveObject, mutableHandlers, readonlyHandlers } from './baseHandlers'
 
 export enum ReactiveFlags {
