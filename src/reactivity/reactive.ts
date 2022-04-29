@@ -1,4 +1,4 @@
-import { createReactiveObject, mutableHandlers, readonlyHandlers } from './baseHandlers'
+import { createReactiveObject, mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from './baseHandlers'
 
 export enum ReactiveFlags {
   IS_REACTIVE = '__v_isReactive',
@@ -13,9 +13,15 @@ export interface Target {
 export function reactive<T extends object>(target: T) {
   return createReactiveObject<T>(target, mutableHandlers)
 }
-// 其实就是一个没有set操作的reactive
+
+// 其实就是一个没有set操作的reactive（会深层readonly）
 export function readonly<T extends object>(target: T) {
   return createReactiveObject<T>(target, readonlyHandlers)
+}
+
+// 浅浅的readonly一下，创建一个 proxy，使其自身的 property 为只读，但不执行嵌套对象的深度只读转换 (暴露原始值)
+export function shallowReadonly<T extends object>(target: T) {
+  return createReactiveObject<T>(target, shallowReadonlyHandlers)
 }
 
 export function isReactive(value: unknown) {
