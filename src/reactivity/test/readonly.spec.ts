@@ -1,4 +1,4 @@
-import { readonly, isReadonly } from '../reactive'
+import { readonly, isReadonly, isProxy } from '../reactive'
 describe('readonly', () => {
   it('readonly not set', () => {
     let original = {
@@ -19,6 +19,9 @@ describe('readonly', () => {
     expect(isReadonly(warper.arr)).toBe(true)
     expect(isReadonly(warper.arr[0])).toBe(true)
     expect(warper.foo.fuck.name).toBe('what')
+    expect(isProxy(warper)).toBe(true)
+    expect(isProxy(warper.foo.fuck.name)).toBe(false)
+
   })
   it('warning when it be call set operation', () => {
     let original = {

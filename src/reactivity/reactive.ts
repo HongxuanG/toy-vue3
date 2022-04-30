@@ -30,7 +30,12 @@ export function isReactive(value: unknown) {
   // 优化点：用enum管理状态，增强代码可读性
   return !!(value as Target)[ReactiveFlags.IS_REACTIVE]
 }
+
 export function isReadonly(value: unknown){
   // 同上
   return !!(value as Target)[ReactiveFlags.IS_READONLY]
+}
+
+export function isProxy(value: unknown){
+  return isReactive(value) || isReadonly(value)
 }

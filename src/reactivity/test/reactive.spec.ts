@@ -1,4 +1,4 @@
-import { reactive, isReactive } from '../reactive'
+import { reactive, isReactive, isProxy } from '../reactive'
 
 describe('reactive', () => {
   it('reactive test', () => {
@@ -8,13 +8,14 @@ describe('reactive', () => {
     expect(count.num).toEqual(1)
     expect(isReactive(original)).toBe(false)
     expect(isReactive(count)).toBe(true)
+    expect(isProxy(count)).toBe(true)
   })
   it('nested reactive', () => {
     let original = {
       foo: {
-        name: 'ghx'
+        name: 'ghx',
       },
-      arr: [{ age: 23 }]
+      arr: [{ age: 23 }],
     }
     const nested = reactive(original)
     expect(isReactive(nested.foo)).toBe(true)
@@ -22,6 +23,5 @@ describe('reactive', () => {
     expect(isReactive(nested.arr[0])).toBe(true)
     expect(isReactive(nested.foo)).toBe(true)
     // expect(isReactive(nested.foo.name)).toBe(true) // 涉及到往后的知识点 isRef
-
   })
 })
