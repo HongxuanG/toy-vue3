@@ -6,6 +6,10 @@ const get = createGetter()
 const set = createSetter()
 const readonlyGet = createGetter(true)
 const shallowReadonlyGet = createGetter(true, true)
+// shallowReactive的get操作
+const shallowGet = createGetter(false, true)
+// shallowReactive的set操作
+const shallowSet = createSetter(true)
 
 // 高阶函数
 export function createGetter<T extends object>(isReadonly = false, isShallow = false) {
@@ -15,24 +19,29 @@ export function createGetter<T extends object>(isReadonly = false, isShallow = f
       return !isReadonly
     } else if (key === ReactiveFlags.IS_READONLY) {
       return isReadonly
+    } else if (key === ReactiveFlags.IS_SHALLOW) {
+      return isShallow
+    } else if(key === ReactiveFlags.RAW){
+      return target
     }
     let res = Reflect.get(target, key)
     if (isShallow) {
       return res
     }
-    // 之前都是只实现表面一层的reactive，我们现在实现嵌套对象的reactive
-    if(isObject(res)){
-      return isReadonly ? readonly(res) : reactive(res)
-    }
+
     if (!isReadonly) {
       // 判断是否readonly
       // 依赖收集
       track(target, key as string)
     }
+    // 之前都是只实现表面一层的reactive，我们现在实现嵌套对象的reactive
+    if (isObject(res)) {
+      return isReadonly ? readonly(res) : reactive(res)
+    }
     return res
   }
 }
-export function createSetter<T extends object>() {
+export function createSetter<T extends object>(isShallow = false) {
   return function set(target: T, key: string | symbol, value: any) {
     let success: boolean
     success = Reflect.set(target, key, value)
@@ -53,9 +62,16 @@ export const readonlyHandlers: ProxyHandler<object> = {
     return true
   },
 }
-export const shallowReadonlyHandlers: ProxyHandler<object> = extend({}, {
+export const shallowReadonlyHandlers: ProxyHandler<object> = extend({}, 
+  readonlyHandlers,
+  {
   get: shallowReadonlyGet
 })
+export const shallowReactiveHandlers: ProxyHandler<object> = extend({},
+  mutableHandlers, {
+    get: shallowGet,
+    set: shallowSet
+  })
 export function createReactiveObject<T extends object>(target: T, handlers: ProxyHandler<T>) {
   return new Proxy(target, handlers)
 }

@@ -1,5 +1,5 @@
-import { effect, stop } from '../index'
-import { reactive } from '../index'
+import { effect, stop } from "../effect"
+import { reactive } from "../reactive"
 describe('effect test', () => {
   it('effect', () => {
     // 创建proxy代理

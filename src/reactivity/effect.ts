@@ -1,8 +1,9 @@
-import {extend} from '../shared/index'
+import { extend } from '../shared/index'
 export type EffectScheduler = (...args: any[]) => any
+export type Dep = Set<ReactiveEffect>
 class ReactiveEffect {
-  public deps: Set<ReactiveEffect>[] = []
-  public active = true  // 该effect是否存活
+  public deps: Dep[] = []
+  public active = true // 该effect是否存活
   public onStop?: () => void
   constructor(public fn: Function, public scheduler?: EffectScheduler) {}
   run() {
@@ -32,7 +33,7 @@ class ReactiveEffect {
 // 清除指定依赖
 function cleanupEffect(effect: ReactiveEffect) {
   // 对effect解构，解出deps，减少对象在词法环境寻找属性的次数
-  const {deps} = effect
+  const { deps } = effect
   if (deps.length !== 0) {
     for (let i = 0; i < deps.length; i++) {
       deps[i].delete(effect)
@@ -67,37 +68,43 @@ export function track(target: Record<EffectKey, any>, key: EffectKey) {
     depsMap = new Map()
     targetMap.set(target, depsMap)
   }
-  // deps是一个Set对象，存放着这个key相对应的所有依赖
-  let deps = depsMap.get(key)
+  // dep是一个Set对象，存放着这个key相对应的所有依赖
+  let dep = depsMap.get(key)
   // 如果没有key相对应的Set 初始化Set
-  if (!deps) {
-    deps = new Set()
-    depsMap.set(key, deps)
+  if (!dep) {
+    dep = new Set()
+    depsMap.set(key, dep)
   }
+  trackEffect(dep)
+}
+// 依赖收集
+export function trackEffect(dep: Dep){
   // 避免不必要的add操作
-  if (deps.has(activeEffect)) return
+  if (dep.has(activeEffect)) return
   // 将activeEffect实例对象add给deps
-  deps.add(activeEffect)
+  dep.add(activeEffect)
   // activeEffect的deps 接收 Set<ReactiveEffect>类型的deps
   // 供删除依赖的时候使用(停止监听依赖)
-  activeEffect.deps.push(deps)
+  activeEffect.deps.push(dep)
 }
-function isTracking(){
-  
+export function isTracking() {
   return activeEffect !== undefined && shouldTrack
 }
 // 这个trigger的实现逻辑很简单：找出target的key对应的所有依赖，并依次执行
 export function trigger(target: Record<EffectKey, any>, key: EffectKey) {
-
   const depsMap = targetMap.get(target)
-  const deps = depsMap?.get(key)
-  if (deps) {
-    for (let dep of deps) {
-      if (dep.scheduler) {
-        dep.scheduler()
-      } else {
-        dep.run()
-      }
+  const dep = depsMap?.get(key)
+  if (dep) {
+    triggerEffect(dep)
+  }
+}
+// 触发依赖
+export function triggerEffect(dep: Dep){
+  for (let effect of dep) {
+    if (effect.scheduler) {
+      effect.scheduler()
+    } else {
+      effect.run()
     }
   }
 }
@@ -113,7 +120,7 @@ export interface EffectRunner<T = any> {
 // 根据官方给出的介绍：effect会立即触发这个函数，同时响应式追踪其依赖
 export function effect<T = any>(fn: () => T, option?: EffectOption): EffectRunner {
   let _effect = new ReactiveEffect(fn)
-  if(option){
+  if (option) {
     extend(_effect, option)
   }
   _effect.run()

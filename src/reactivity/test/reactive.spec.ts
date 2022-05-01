@@ -1,4 +1,4 @@
-import { reactive, isReactive, isProxy } from '../reactive'
+import { reactive, isReactive, isProxy, toRaw } from '../reactive'
 
 describe('reactive', () => {
   it('reactive test', () => {
@@ -23,5 +23,22 @@ describe('reactive', () => {
     expect(isReactive(nested.arr[0])).toBe(true)
     expect(isReactive(nested.foo)).toBe(true)
     // expect(isReactive(nested.foo.name)).toBe(true) // 涉及到往后的知识点 isRef
+  })
+  test('toRaw', () => {
+    const original = { foo: 1 }
+    const observed = reactive(original)
+    expect(toRaw(observed)).toBe(original)
+    expect(toRaw(original)).toBe(original)
+  })
+  it('nested reactive toRaw', () => {
+    const original = {
+      foo: {
+        name: 'ghx',
+      },
+    }
+    const observed = reactive(original)
+    const raw = toRaw(observed)
+    expect(raw).toBe(original)
+    expect(raw.foo).toBe(original.foo)
   })
 })
