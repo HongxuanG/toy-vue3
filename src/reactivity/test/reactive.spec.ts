@@ -27,6 +27,7 @@ describe('reactive', () => {
   test('toRaw', () => {
     const original = { foo: 1 }
     const observed = reactive(original)
+    // 输出的结果必须要等于原始值
     expect(toRaw(observed)).toBe(original)
     expect(toRaw(original)).toBe(original)
   })
