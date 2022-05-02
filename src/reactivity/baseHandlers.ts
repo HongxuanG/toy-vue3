@@ -21,18 +21,18 @@ export function createGetter<T extends object>(isReadonly = false, isShallow = f
       return isReadonly
     } else if (key === ReactiveFlags.IS_SHALLOW) {
       return isShallow
-    } else if(key === ReactiveFlags.RAW){
+    } else if (key === ReactiveFlags.RAW) {
       return target
     }
     let res = Reflect.get(target, key)
-    if (isShallow) {
-      return res
-    }
 
     if (!isReadonly) {
       // 判断是否readonly
       // 依赖收集
       track(target, key as string)
+    }
+    if (isShallow) {
+      return res
     }
     // 之前都是只实现表面一层的reactive，我们现在实现嵌套对象的reactive
     if (isObject(res)) {
@@ -41,6 +41,7 @@ export function createGetter<T extends object>(isReadonly = false, isShallow = f
     return res
   }
 }
+// 这个isShallow涉及到的是shallowReactive
 export function createSetter<T extends object>(isShallow = false) {
   return function set(target: T, key: string | symbol, value: any) {
     let success: boolean
@@ -62,16 +63,13 @@ export const readonlyHandlers: ProxyHandler<object> = {
     return true
   },
 }
-export const shallowReadonlyHandlers: ProxyHandler<object> = extend({}, 
-  readonlyHandlers,
-  {
-  get: shallowReadonlyGet
+export const shallowReadonlyHandlers: ProxyHandler<object> = extend({}, readonlyHandlers, {
+  get: shallowReadonlyGet,
 })
-export const shallowReactiveHandlers: ProxyHandler<object> = extend({},
-  mutableHandlers, {
-    get: shallowGet,
-    set: shallowSet
-  })
+export const shallowReactiveHandlers: ProxyHandler<object> = extend({}, mutableHandlers, {
+  get: shallowGet,
+  set: shallowSet,
+})
 export function createReactiveObject<T extends object>(target: T, handlers: ProxyHandler<T>) {
   return new Proxy(target, handlers)
 }

@@ -13,7 +13,12 @@
 - [x] 实现 isReactive 和 isReadonly 功能
 - [x] readonly 和 reactive 嵌套对象功能
 - [x] 实现 shallowReadonly 功能
-- [ ] 实现 shallowReactive 功能
-- [ ] 实现 isProxy 功能
-- [ ] 实现 ref 功能
+- [x] 实现 shallowReactive 功能
+- [x] 实现 isProxy 功能
+- [x] 实现 isShallow 功能
+- [x] 实现 ref 功能
 - [ ] 实现 isRef 和 unRef 功能
+- [ ] 实现 proxyRefs 功能
+- [ ] 实现 computed 计算属性功能
+- [ ] 实现初始化 component 主流程
+- [ ]

@@ -10,10 +10,10 @@ import { reactive } from './reactive'
 class RefImpl<T> {
   private _value: T
   public dep?: Dep = undefined
-  private rawValue: T
+  private _rawValue: T
   constructor(value: any) {
     this._value = convert(value)
-    this.rawValue = value
+    this._rawValue = value
     this.dep = new Set()
   }
   get value() {
@@ -24,10 +24,10 @@ class RefImpl<T> {
     // 触发依赖
 
     // 对比旧的值和新的值，如果相等就没必要触发依赖和赋值了，这也是性能优化的点
-    if (hasChanged(newValue, this.rawValue)) {
+    if (hasChanged(newValue, this._rawValue)) {
       // 注意这里先赋值再触发依赖
       this._value = convert(newValue)
-      this.rawValue = newValue
+      this._rawValue = newValue
       triggerEffect(this.dep as Dep)
     }
 
