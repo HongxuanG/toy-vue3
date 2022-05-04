@@ -1,7 +1,7 @@
 import { extend } from '../shared/index'
 export type EffectScheduler = (...args: any[]) => any
 export type Dep = Set<ReactiveEffect>
-class ReactiveEffect {
+export class ReactiveEffect {
   public deps: Dep[] = []
   public active = true // 该effect是否存活
   public onStop?: () => void
