@@ -9,7 +9,6 @@ export class ComputedRefImpl<T> {
     getter: ComputedGetter<T>,
     private setter: ComputedSetter<T>
   ) {
-    // 给activeEffect赋值, 一边后续能有依赖可以收集
     this._effect = new ReactiveEffect(getter, ()=>{
       // 把dirty重新赋值为true
       if(!this._dirty){
