@@ -2,7 +2,7 @@ import { isFunction } from "../shared"
 import { ReactiveEffect } from "./effect"
 
 export class ComputedRefImpl<T> {
-  public _value!: T
+  private _value!: T
   private _dirty = true // 避免已经不是第一次执行get操作的时候再次调用compute
   private _effect: ReactiveEffect // 进行依赖收集
   constructor(

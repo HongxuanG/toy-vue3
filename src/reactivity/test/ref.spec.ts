@@ -1,6 +1,7 @@
 import { ref, isRef, unref, proxyRefs } from '../ref'
 import {effect} from '../effect'
 import { computed } from '../computed'
+import { reactive } from '../reactive'
 describe('ref',()=>{
   it('should hold a value', () => {
     const a = ref(1)
@@ -56,7 +57,15 @@ describe('ref',()=>{
       age: ref(10),
       name: 'ghx'
     }
+    const original = {
+      k: 'v'
+    }
+    const r1 = reactive(original)
+    const p1 = proxyRefs(r1)
     const proxyUser = proxyRefs(user)
+
+    expect(p1).toBe(r1)
+
     expect(user.age.value).toBe(10)
     expect(proxyUser.age).toBe(10)
     expect(proxyUser.name).toBe('ghx')
@@ -66,7 +75,9 @@ describe('ref',()=>{
     expect(user.age.value).toBe(20)
 
     proxyUser.age = ref(10)
+    proxyUser.name = 'superman'
     expect(proxyUser.age).toBe(10)
+    expect(proxyUser.name).toBe('superman')
     expect(user.age.value).toBe(10)
   })
   test('should support setter', ()=>{
