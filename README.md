@@ -17,8 +17,23 @@
 - [x] 实现 isProxy 功能
 - [x] 实现 isShallow 功能
 - [x] 实现 ref 功能
-- [ ] 实现 isRef 和 unRef 功能
-- [ ] 实现 proxyRefs 功能
-- [ ] 实现 computed 计算属性功能
+- [x] 实现 isRef 和 unRef 功能
+- [x] 实现 proxyRefs 功能
+- [x] 实现 computed 计算属性功能
 - [ ] 实现初始化 component 主流程
-- [ ]
+- [ ] 实现初始化 element 主流程
+- [ ] 实现组件代理对象
+- [ ] 实现 shapeFlags
+- [ ] 实现注册事件功能
+- [ ] 实现组件 props 功能
+- [ ] 实现组件 emit 功能
+- [ ] 实现组件 slots 功能
+- [ ] 实现 Fragment 和 Text 类型节点
+- [ ] 实现 getCurrentInstance
+- [ ] 实现 provide-inject 功能
+- [ ] 实现自定义渲染器 custom renderer
+- [ ] 更新 element 流程搭建
+- [ ] 更新 element 的 props
+- [ ] 更新 element 的 children
+- [ ] 更新 element 的双端对比 diff 算法
+- [ ] 实现组件更新功能
