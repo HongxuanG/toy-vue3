@@ -1,6 +1,7 @@
 import { isFunction, isObject } from "../shared"
 
 export function createComponentInstance(vnode: any) {
+  console.log(vnode)
   const type = vnode.type
   const instance = {
     vnode,
@@ -42,7 +43,8 @@ function handleSetupResult(instance: any, setupResult: any) {
 }
 // 结束组件的安装
 function finishComponentSetup(instance: any) {
-  const Component = instance.type
+  const Component = instance.type  // 遇到h('div',{}, this.name)  这里Component将为'div'
+
   if(instance){
     instance.render = Component.render
   }

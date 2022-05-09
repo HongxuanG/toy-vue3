@@ -43,6 +43,7 @@ function mountComponent(vnode: any, container: any) {
 
 function setupRenderEffect(instance: any, container: any) {
   // 这个render()已经在finishComponentSetup处理过了，就是 instance.type.render() 特殊对象的render()
-  const vnode = instance.render()
-  patch(vnode, container)
+  const subTree = instance.render()
+  // 对子树进行拆箱操作
+  patch(subTree, container)
 }

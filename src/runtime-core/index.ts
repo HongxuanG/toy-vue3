@@ -4,6 +4,5 @@
 // 2. 经过createVNode()     -> vnode对象
 // 3. 经过mountElement()    -> DOM
 // 4. 插入到                 -> root的#app
-export {
-  createApp
-} from './createApp'
+export { createApp } from './createApp'
+export { h } from './h'
