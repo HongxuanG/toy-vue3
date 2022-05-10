@@ -4,11 +4,11 @@ export default {
   input: './src/index.ts',
   output: [
     {
-      file: pkg.main,
+      file: './lib/guide-toy-vue3.cjs.js',
       format: 'cjs'
     },
     {
-      file: pkg.module,
+      file: './lib/guide-toy-vue3.esm.js',
       format: 'es'
     }
   ],

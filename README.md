@@ -20,8 +20,8 @@
 - [x] 实现 isRef 和 unRef 功能
 - [x] 实现 proxyRefs 功能
 - [x] 实现 computed 计算属性功能
-- [ ] 实现初始化 component 主流程
-- [ ] 实现初始化 element 主流程
+- [x] 实现初始化 component 主流程
+- [x] 实现初始化 element 主流程
 - [ ] 实现组件代理对象
 - [ ] 实现 shapeFlags
 - [ ] 实现注册事件功能
