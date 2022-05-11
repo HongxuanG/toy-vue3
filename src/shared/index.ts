@@ -3,6 +3,9 @@ export const extend = Object.assign
 export const isObject = (value: unknown) => {
   return value !== null && typeof value === 'object'
 }
+export const isString = (value: unknown) => {
+  return typeof value === 'string'
+}
 // 类型保护
 export const isFunction = (value: unknown): value is Function => {
   return typeof value === 'function'

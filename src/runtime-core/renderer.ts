@@ -1,4 +1,4 @@
-import { isObject } from '../shared'
+import { isObject, isString } from '../shared'
 import { createComponentInstance, setupComponent } from './component'
 export function render(vnode: any, container: any) {
   // 做patch算法
@@ -19,7 +19,7 @@ export function render(vnode: any, container: any) {
 function patch(vnode: any, container: any) {
   // 检查是什么类型的vnode
   console.log('vnode', vnode.type)
-  if(typeof vnode.type === 'string'){
+  if(isString(vnode.type)){
     // 是一个普通元素？处理vnode是普通标签的情况
     processElement(vnode, container)
   }else if(isObject(vnode.type)){
@@ -35,7 +35,7 @@ function processElement(vnode: any, container: any) {
   mountElement(vnode, container)
 }
 // 最后，它把setup()的返回值挂载在组件的instance的setupState上
-// instance的type的render()函数挂载在组件的instance的render上
+// instance.type的render()函数挂载在组件的instance的render上
 function mountComponent(vnode: any, container: any) {
   const instance = createComponentInstance(vnode)
   // 安装组件
@@ -47,7 +47,7 @@ function mountComponent(vnode: any, container: any) {
 function mountElement(vnode: any, container: any) {
   const el = document.createElement(vnode.type) as HTMLElement
   let { children, props } = vnode
-  if (typeof children === 'string') {
+  if (isString(children)) {
     el.textContent = children
   } else if (Array.isArray(children)) {
     mountChildren(vnode, el)
