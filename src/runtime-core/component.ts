@@ -1,10 +1,15 @@
 import { isFunction, isObject } from '../shared'
+import { publicInstanceProxyHandlers } from './componentPublicInstance'
+
+export type Data = Record<string, unknown>
 
 export function createComponentInstance(vnode: any) {
   const type = vnode.type
   const instance = {
     vnode,
     type,
+    render: null,
+    setupState: {},
   }
   return instance
 }
@@ -17,6 +22,7 @@ export function setupComponent(instance: any) {
 // 初始化组件的状态
 function setupStatefulComponent(instance: any) {
   const Component = instance.type
+  instance.proxy = new Proxy({ _: instance } as Data, publicInstanceProxyHandlers)
   const { setup } = Component
   // 有时候用户并没有使用setup()
   if (setup) {
@@ -33,6 +39,7 @@ function setupStatefulComponent(instance: any) {
 function handleSetupResult(instance: any, setupResult: any) {
   // TODO handle function
   if (isFunction(setupResult)) {
+    instance.render = setupResult
   } else if (isObject(setupResult)) {
     // 把setup返回的对象挂载到setupState上
     instance.setupState = setupResult

@@ -6,7 +6,7 @@
   "module": "lib/guide-toy-vue3-esm.js",
   "scripts": {
     "test": "jest",
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.js -w"
   },
   "repository": {
     "type": "git",
