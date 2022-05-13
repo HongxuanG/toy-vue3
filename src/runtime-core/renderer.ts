@@ -75,8 +75,8 @@ function setupRenderEffect(instance: any,vnode: any, container: any) {
   // 这个render()已经在finishComponentSetup处理过了，就是 instance.type.render() 特殊对象的render()
   // render函数内部的this指向 修改为 setupStatefulComponent中定义的proxy对象
   const subTree = instance.render.call(instance.proxy)
-  // 对子树进行拆箱操作
+  // 对子树进行拆箱操作 递归进去
   patch(subTree, container)
-  // 到了这里，组件内的所有element已经挂在到document里面了
+  // 代码到了这里，组件内的所有element已经挂在到document里面了
   vnode.el = subTree.el
 }
