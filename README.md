@@ -42,9 +42,9 @@ runtime-core部分
 - [x] 实现初始化 component 主流程
 - [x] 实现初始化 element 主流程  （通过递归patch拆箱操作，最终都会走向mountElement这一步）
 - [x] 实现组件代理对象  （instance.proxy解决`render()`函数的this指向问题）
-- [ ] 实现 shapeFlags
-- [ ] 实现注册事件功能
-- [ ] 实现组件 props 功能
+- [x] 实现 shapeFlags  （利用位运算 左移运算 对vnode添加标识，标识是什么类型：子级文本，子级数组，组件，HTML元素）
+- [x] 实现注册事件功能     （通过在vnode.props识别 props对象的key是以on开头并且后一个字母是大写来判断是否是事件）
+- [x] 实现组件 props 功能   （在render的h函数中可以用this访问到，并且是shallowReadonly）
 - [ ] 实现组件 emit 功能
 - [ ] 实现组件 slots 功能
 - [ ] 实现 Fragment 和 Text 类型节点

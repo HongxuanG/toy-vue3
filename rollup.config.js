@@ -5,11 +5,13 @@ export default {
   output: [
     {
       file: './lib/guide-toy-vue3.cjs.js',
-      format: 'cjs'
+      format: 'cjs',
+      sourcemap: true,
     },
     {
       file: './lib/guide-toy-vue3.esm.js',
-      format: 'es'
+      format: 'es',
+      sourcemap: true,
     }
   ],
   plugins: [typescript()]

@@ -59,7 +59,7 @@ export const mutableHandlers: ProxyHandler<object> = {
 export const readonlyHandlers: ProxyHandler<object> = {
   get: readonlyGet,
   set(target, key, value) {
-    console.warn(`${target} do not set ${String(key)} value ${value}, because it is readonly`)
+    console.warn(`${JSON.stringify(target)} do not set ${String(key)} value ${value}, because it is readonly`)
     return true
   },
 }
@@ -71,5 +71,9 @@ export const shallowReactiveHandlers: ProxyHandler<object> = extend({}, mutableH
   set: shallowSet,
 })
 export function createReactiveObject<T extends object>(target: T, handlers: ProxyHandler<T>) {
+  if(!isObject(target)) {
+    console.warn(`target ${target} is not a object`)
+    return target
+  }
   return new Proxy(target, handlers)
 }

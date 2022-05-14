@@ -1,5 +1,6 @@
-import { isObject, isString } from '../shared'
+import { ShapeFlags, isOn, isFunction } from '../shared'
 import { createComponentInstance, setupComponent } from './component'
+
 export function render(vnode: any, container: any) {
   // 做patch算法
   patch(vnode, container)
@@ -11,26 +12,26 @@ export function render(vnode: any, container: any) {
  * 或者{..., data, methods, render(){}, ...}
  *
  * 之后 这个特殊对象作为参数会传入 createVNode()  创建虚拟dom
- *
- *
  */
 // 传入vnode，递归对一个组件或者普通元素进行拆箱，在内部对vnode的type判断执行不同的处理函数
 
 function patch(vnode: any, container: any) {
   // 检查是什么类型的vnode
   console.log('vnode', vnode.type)
-  if (isString(vnode.type)) {
+  // & 左右两边同时为1 则为1   可以应用在 0001 & 0010 判断指定的位置是否为1  这个案例会输出0000  所以为false 指定的位置并没有相同
+  if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
     // 是一个普通元素？处理vnode是普通标签的情况
     processElement(vnode, container)
-  } else if (isObject(vnode.type)) {
+  } else if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
     // 是一个组件？处理vnode是组件的情况
-    // 目前只有一个component所以这里不做区分直接 processComponent
     processComponent(vnode, container)
   }
 }
+// 处理组件的情况
 function processComponent(vnode: any, container: any) {
   mountComponent(vnode, container)
 }
+// 处理元素的情况
 function processElement(vnode: any, container: any) {
   mountElement(vnode, container)
 }
@@ -41,7 +42,7 @@ function mountComponent(vnode: any, container: any) {
   // 安装组件
   setupComponent(instance)
 
-  //
+  // 
   setupRenderEffect(instance,vnode, container)
 }
 function mountElement(vnode: any, container: any) {
@@ -49,17 +50,23 @@ function mountElement(vnode: any, container: any) {
   console.log('mountElement', vnode)
   const el = (vnode.el = document.createElement(vnode.type) as HTMLElement)
   let { children, props } = vnode
-  if (isString(children)) {
+  // 子节点是文本节点
+  if (vnode.shapeFlag & ShapeFlags.TEXT_CHILDREN) {
     el.textContent = children
-  } else if (Array.isArray(children)) {
+    // 子节点是数组
+  } else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
     mountChildren(vnode, el)
   }
+  let val: any
   // 对vnode的props进行处理，把虚拟属性添加到el
   for (let key of Object.getOwnPropertyNames(props).values()) {
-    if (Array.isArray(props[key])) {
-      el.setAttribute(key, props[key].join(' '))
+    val = props[key]
+    if (Array.isArray(val)) {
+      el.setAttribute(key, val.join(' '))
+    } else if (isOn(key) && isFunction(val)) {
+      el.addEventListener(key.slice(2).toLowerCase(), val)
     } else {
-      el.setAttribute(key, props[key])
+      el.setAttribute(key, val)
     }
   }
   container.append(el)
