@@ -1,4 +1,4 @@
-import { h } from '../lib/guide-toy-vue3.esm.js'
+import { h } from '../../lib/guide-toy-vue3.esm.js'
 import Foo from './Foo.js'
 
 
