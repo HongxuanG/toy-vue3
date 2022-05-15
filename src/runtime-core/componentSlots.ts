@@ -12,6 +12,9 @@ function normalizeObjectSlots(slots: any, children: any) {
     slots[key] = (props: any) => normalizeSlotValue(value(props))
   }
 }
+function normalizeVNodeSlots(slots: any, children: any){
+  
+}
 function normalizeSlotValue(value: any) {
   return isArray(value) ? value : [value]
 }

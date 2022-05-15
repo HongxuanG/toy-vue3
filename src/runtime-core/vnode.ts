@@ -1,5 +1,9 @@
 import { isArray, isObject, isString } from '../shared'
 import { ShapeFlags } from '../shared/shapeFlags'
+
+export const Fragment = Symbol('Fragment')
+export const Text = Symbol('Text')
+
 // type是 <template></template>经过编译之后具有render()函数的对象，此外还有__file和__hmrId这些无关的属性
 export function createVNode(type: any, props?: any, children?: any) {
   const vnode = {
@@ -37,4 +41,7 @@ function normalizeChildren(vnode: any, children: any){
       vnode.shapeFlag |= ShapeFlags.SLOTS_CHILDREN
     }
   }
+}
+export function createTextVNode(text: string){
+  return createVNode(Text, {}, text)
 }

@@ -1,5 +1,6 @@
 import { ShapeFlags, isOn, isFunction } from '../shared'
 import { createComponentInstance, setupComponent } from './component'
+import { Fragment, Text } from './vnode'
 
 export function render(vnode: any, container: any) {
   // 做patch算法
@@ -18,14 +19,30 @@ export function render(vnode: any, container: any) {
 function patch(vnode: any, container: any) {
   // 检查是什么类型的vnode
   console.log('vnode', vnode.type)
-  // & 左右两边同时为1 则为1   可以应用在 0001 & 0010 判断指定的位置是否为1  这个案例会输出0000  所以为false 指定的位置并没有相同
-  if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
-    // 是一个普通元素？处理vnode是普通标签的情况
-    processElement(vnode, container)
-  } else if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-    // 是一个组件？处理vnode是组件的情况
-    processComponent(vnode, container)
+  const {type} = vnode
+  switch(type){
+    case Fragment:
+      processFragment(vnode, container)
+    case Text:
+      processText(vnode, container)
+    default: {
+      // & 左右两边同时为1 则为1   可以应用在 0001 & 0010 判断指定的位置是否为1  这个案例会输出0000  所以为false 指定的位置并没有相同
+      if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
+        // 是一个普通元素？处理vnode是普通标签的情况
+        processElement(vnode, container)
+      } else if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+        // 是一个组件？处理vnode是组件的情况
+        processComponent(vnode, container)
+      }
+
+    }
   }
+}
+function processText(vnode: any, container: any){
+  mountText(vnode, container)
+}
+function processFragment(vnode: any, container: any){
+  mountChildren(vnode, container)
 }
 // 处理组件的情况
 function processComponent(vnode: any, container: any) {
@@ -70,6 +87,11 @@ function mountElement(vnode: any, container: any) {
     }
   }
   container.append(el)
+}
+function mountText(vnode: any, container: any){
+  const {children} = vnode
+  const textNode = (vnode.el = document.createTextNode(children))
+  container.append(textNode)
 }
 function mountChildren(vnode: any, container: any) {
   vnode.children.forEach((vnode: any) => {

@@ -11,7 +11,7 @@ export default {
     }, [
       h('p', {class: 'red'}, 'red'),
       h('p', {class: 'blue'}, this.name),
-      h(Foo, {}, h('p', {}, '我是slot1'))
+      h(Foo, {}, {default: ()=>h('p', {}, '我是slot1')})
       // 具名插槽
       // h(Foo, {}, {
       //   header: h('p', {}, '我是header slot1'),
