@@ -1,4 +1,4 @@
-import { isObject, isString } from '../shared'
+import { isArray, isObject, isString } from '../shared'
 import { ShapeFlags } from '../shared/shapeFlags'
 // type是 <template></template>经过编译之后具有render()函数的对象，此外还有__file和__hmrId这些无关的属性
 export function createVNode(type: any, props?: any, children?: any) {
@@ -26,8 +26,15 @@ function normalizeChildren(vnode: any, children: any){
   // 在这里相当于给vnode追加额外的标识
   if(isString(children)){
     vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN
-    // 
-  } else if(Array.isArray(children)){
+    // 子级是数组
+  } else if(isArray(children)){
     vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN
+  }
+  // vnode是组件
+  if(vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT){
+    // 子级是对象
+    if(isObject(children) ){
+      vnode.shapeFlag |= ShapeFlags.SLOTS_CHILDREN
+    }
   }
 }

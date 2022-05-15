@@ -11,6 +11,7 @@ export const isString = (value: unknown) => {
 export const isFunction = (value: unknown): value is Function => {
   return typeof value === 'function'
 }
+export const isArray = Array.isArray
 export const hasChanged = (newValue: any, value: any) => {
   return !Object.is(newValue, value)
 }

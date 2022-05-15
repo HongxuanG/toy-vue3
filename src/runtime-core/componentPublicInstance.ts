@@ -1,8 +1,10 @@
 import { hasOwn } from '../shared'
 
 export type PublicPropertiesMap = Record<string, (i: any) => any>
+// 实例property
 const publicPropertiesMap: PublicPropertiesMap = {
   $el: (i: any) => i.vnode.el,
+  $slots: (i: any) => i.slots
 }
 export const publicInstanceProxyHandlers: ProxyHandler<any> = {
   get({ _: instance }, key: string) {
@@ -14,7 +16,7 @@ export const publicInstanceProxyHandlers: ProxyHandler<any> = {
     } else if (hasOwn(props, key)) {
       return props[key]
     }
-
+    // 在publicPropertiesMap中寻找key，并调用，返回结果
     const publicGetter = publicPropertiesMap[key]
     if (publicGetter) {
       return publicGetter(instance)

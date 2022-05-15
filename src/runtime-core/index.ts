@@ -6,3 +6,4 @@
 // 4. 插入到                 -> root的#app
 export { createApp } from './createApp'
 export { h } from './h'
+export { renderSlots } from './helper/renderSlots'

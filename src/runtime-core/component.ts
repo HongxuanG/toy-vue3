@@ -3,6 +3,7 @@ import { isFunction, isObject } from '../shared'
 import { emit } from './componentEmit'
 import { initProps } from './componentProps'
 import { publicInstanceProxyHandlers } from './componentPublicInstance'
+import { initSlots } from './componentSlots'
 
 export type Data = Record<string, unknown>
 
@@ -14,7 +15,8 @@ export function createComponentInstance(vnode: any) {
     render: null,
     setupState: {},
     props: {},
-    emit: () => {}
+    emit: () => {},
+    slots: {},
   }
   instance.emit = emit.bind(null, instance) as any
   return instance
@@ -23,10 +25,11 @@ export function createComponentInstance(vnode: any) {
 export function setupComponent(instance: any) {
   // 初始化组件外部传给组件的props
   initProps(instance, instance.vnode.props)
-  // initSlots()
+  console.log('children===>',instance.vnode.children)
+  initSlots(instance, instance.vnode.children)
   setupStatefulComponent(instance)
 }
-// 初始化组件的状态
+// 初始化有状态的组件
 function setupStatefulComponent(instance: any) {
   const Component = instance.type
   // 解决render返回的h()函数里面this的问题，指向setup函数
