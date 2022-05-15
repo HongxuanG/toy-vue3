@@ -1,4 +1,4 @@
-import { extend } from '../shared/index'
+import { extend } from '../shared'
 
 export type EffectScheduler = (...args: any[]) => any
 export type Dep = Set<ReactiveEffect>
