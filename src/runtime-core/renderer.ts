@@ -19,12 +19,14 @@ export function render(vnode: any, container: any) {
 function patch(vnode: any, container: any) {
   // 检查是什么类型的vnode
   console.log('vnode', vnode.type)
-  const {type} = vnode
-  switch(type){
+  const { type } = vnode
+  switch (type) {
     case Fragment:
       processFragment(vnode, container)
+      break
     case Text:
       processText(vnode, container)
+      break
     default: {
       // & 左右两边同时为1 则为1   可以应用在 0001 & 0010 判断指定的位置是否为1  这个案例会输出0000  所以为false 指定的位置并没有相同
       if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
@@ -34,14 +36,14 @@ function patch(vnode: any, container: any) {
         // 是一个组件？处理vnode是组件的情况
         processComponent(vnode, container)
       }
-
+      break
     }
   }
 }
-function processText(vnode: any, container: any){
+function processText(vnode: any, container: any) {
   mountText(vnode, container)
 }
-function processFragment(vnode: any, container: any){
+function processFragment(vnode: any, container: any) {
   mountChildren(vnode, container)
 }
 // 处理组件的情况
@@ -59,8 +61,8 @@ function mountComponent(vnode: any, container: any) {
   // 安装组件
   setupComponent(instance)
 
-  // 
-  setupRenderEffect(instance,vnode, container)
+  //
+  setupRenderEffect(instance, vnode, container)
 }
 function mountElement(vnode: any, container: any) {
   // 注意：这个vnode并非是组件的vnode，而是HTML元素的vnode
@@ -88,8 +90,8 @@ function mountElement(vnode: any, container: any) {
   }
   container.append(el)
 }
-function mountText(vnode: any, container: any){
-  const {children} = vnode
+function mountText(vnode: any, container: any) {
+  const { children } = vnode
   const textNode = (vnode.el = document.createTextNode(children))
   container.append(textNode)
 }
@@ -99,7 +101,7 @@ function mountChildren(vnode: any, container: any) {
     patch(vnode, container)
   })
 }
-function setupRenderEffect(instance: any,vnode: any, container: any) {
+function setupRenderEffect(instance: any, vnode: any, container: any) {
   console.log(instance)
   // 这个render()已经在finishComponentSetup处理过了，就是 instance.type.render() 特殊对象的render()
   // render函数内部的this指向 修改为 setupStatefulComponent中定义的proxy对象

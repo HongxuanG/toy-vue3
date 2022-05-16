@@ -1,6 +1,8 @@
 import { isArray, isObject, isString } from '../shared'
 import { ShapeFlags } from '../shared/shapeFlags'
 
+// fragment用来创建一个碎片组件，这个碎片组件并不会真正的渲染出一个<Fragment></Fragment>
+// 他的作用就是渲染slots的时候摆脱div的包裹，让slots直接渲染在父组件上。
 export const Fragment = Symbol('Fragment')
 export const Text = Symbol('Text')
 
@@ -42,6 +44,9 @@ function normalizeChildren(vnode: any, children: any){
     }
   }
 }
+// 创建文本虚拟节点 为什么需要创建文本虚拟节点？直接填上文本不行吗？h('div',{},[Foo, '我是文本'])
+// 挂载html的时候因为children是数组，必然经过mountChildren的循环，然后patch，单纯填上文本是没办法渲染出来的
+// 因为patch并没有针对纯文本做处理，你只能通过div（或者其他html元素）包裹起来生成一个vnode才行，像这样：h('div',{},[Foo, h('div',{}, '我是文本')])
 export function createTextVNode(text: string){
   return createVNode(Text, {}, text)
 }

@@ -7,8 +7,10 @@ export function initSlots(instance: any, children: any) {
   }
 }
 function normalizeObjectSlots(slots: any, children: any) {
+  console.log('slots children===>' ,children)
   for (let key in children) {
     const value = children[key]
+
     slots[key] = (props: any) => normalizeSlotValue(value(props))
   }
 }
