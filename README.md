@@ -46,8 +46,8 @@ runtime-core部分
 - [x] 实现注册事件功能     （通过在vnode.props识别 props对象的key是以on开头并且后一个字母是大写来判断是否是事件）
 - [x] 实现组件 props 功能   （在render的h函数中可以用this访问到，并且是shallowReadonly）
 - [x] 实现组件 emit 功能   （获取组件的props并判断props的'on+事件名'是否是emit的第一个参数：事件名匹配，是的话就执行props的里面的事件）
-- [ ] 实现组件 slots 功能
-- [ ] 实现 Fragment 和 Text 类型节点
+- [x] 实现组件 slots 功能
+- [x] 实现 Fragment 和 Text 类型节点  
 - [ ] 实现 getCurrentInstance
 - [ ] 实现 provide-inject 功能
 - [ ] 实现自定义渲染器 custom renderer
