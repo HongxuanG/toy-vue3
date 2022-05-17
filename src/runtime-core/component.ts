@@ -25,7 +25,6 @@ export function createComponentInstance(vnode: any) {
 export function setupComponent(instance: any) {
   // 初始化组件外部传给组件的props
   initProps(instance, instance.vnode.props)
-  console.log('children===>',instance.vnode.children)
   initSlots(instance, instance.vnode.children)
   setupStatefulComponent(instance)
 }
