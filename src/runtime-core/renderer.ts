@@ -83,6 +83,7 @@ function mountElement(vnode: any, container: any) {
     if (Array.isArray(val)) {
       el.setAttribute(key, val.join(' '))
     } else if (isOn(key) && isFunction(val)) {
+      // 添加事件
       el.addEventListener(key.slice(2).toLowerCase(), val)
     } else {
       el.setAttribute(key, val)

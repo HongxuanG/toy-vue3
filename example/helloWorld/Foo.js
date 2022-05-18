@@ -3,6 +3,7 @@ import { h } from '../../lib/guide-toy-vue3.esm.js'
 export default {
   name: 'Foo',
   render() {
+    // 2. 能在render中通过this访问到props
     return h('div', {}, 'foo: ' + this.count)
   },
   setup(props) {
