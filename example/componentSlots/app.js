@@ -1,4 +1,6 @@
-import { h } from '../../lib/guide-toy-vue3.esm.js'
+import {
+  h
+} from '../../lib/guide-toy-vue3.esm.js'
 import Foo from './Foo.js'
 
 
@@ -9,9 +11,16 @@ export default {
       id: 'root',
       class: ['flex', 'container-r'],
     }, [
-      h('p', {class: 'red'}, 'red'),
-      h('p', {class: 'blue'}, this.name),
-      h(Foo, {}, {default: ()=>h('p', {}, '我是slot1')})
+      h('p', {
+        class: 'red'
+      }, 'red'),
+      h('p', {
+        class: 'blue'
+      }, this.name),
+      h(Foo, {}, [h('p', {}, '我是slot1'), h('p', {}, '我是slot1')])
+      // h(Foo, {}, {
+      //   default: () => h('p', {}, '我是slot1')
+      // })
       // 具名插槽
       // h(Foo, {}, {
       //   header: h('p', {}, '我是header slot1'),
