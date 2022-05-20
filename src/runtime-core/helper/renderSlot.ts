@@ -14,5 +14,5 @@ export function renderSlot(slots: any, name: string = 'default', props: any) {
   // }else{
   //   return slots
   // }
-  return createVNode('div', {}, slots)
+  return createVNode(Fragment, {}, slots)
 }

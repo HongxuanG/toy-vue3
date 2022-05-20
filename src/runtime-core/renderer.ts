@@ -98,7 +98,6 @@ function mountText(vnode: any, container: any) {
 }
 function mountChildren(vnode: any, container: any) {
   vnode.children.forEach((vnode: any) => {
-    console.log('mountChildren==>', vnode)
     patch(vnode, container)
   })
 }
