@@ -17,15 +17,15 @@ export default {
       h('p', {
         class: 'blue'
       }, this.name),
-      h(Foo, {}, [h('p', {}, '我是slot1'), h('p', {}, '我是slot1')])
+      // h(Foo, {}, [h('p', {}, '我是slot1'), h('p', {}, '我是slot1')])
       // h(Foo, {}, {
       //   default: () => h('p', {}, '我是slot1')
       // })
       // 具名插槽
-      // h(Foo, {}, {
-      //   header: h('p', {}, '我是header slot1'),
-      //   footer: h('p', {}, '我是footer slot1')
-      // })
+      h(Foo, {}, {
+        header: h('p', {}, '我是header slot1'),
+        footer: h('p', {}, '我是footer slot1')
+      })
       // 作用域插槽
       // h(Foo, {}, {
       //   header: ({age})=>h('p', {}, '我是header slot1'+age),
