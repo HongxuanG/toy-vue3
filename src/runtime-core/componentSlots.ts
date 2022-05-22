@@ -6,20 +6,21 @@ export function initSlots(instance: any, children: any) {
     normalizeObjectSlots(instance.slots, children)
   }
 }
-// 把数组类型的slots 转成对象 具名name作为instance.slots的属性名，属性值是vnode
+// 具名name作为instance.slots的属性名，属性值是vnode
 function normalizeObjectSlots(slots: any, children: any) {
   console.log('slots children===>' ,children)
+  // 遍历对象
   for (let key in children) {
     const value = children[key]
-
-    // slots[key] = (props: any) => normalizeSlotValue(value(props))
-    slots[key] = normalizeSlotValue(value)
+    slots[key] = (props: any) => normalizeSlotValue(value(props))
+    // slots[key] = normalizeSlotValue(value)
   }
   // slots = normalizeSlotValue(slots)
 }
 function normalizeVNodeSlots(slots: any, children: any){
   
 }
+// 转成数组
 function normalizeSlotValue(value: any) {
   return isArray(value) ? value : [value]
 }

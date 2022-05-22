@@ -61,7 +61,7 @@ function mountComponent(vnode: any, container: any) {
   // 安装组件
   setupComponent(instance)
 
-  //
+  // 
   setupRenderEffect(instance, vnode, container)
 }
 function mountElement(vnode: any, container: any) {
