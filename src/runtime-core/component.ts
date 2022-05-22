@@ -38,12 +38,13 @@ function setupStatefulComponent(instance: any) {
   if (setup) {
     // 处理setup的返回值，如果返回的是对象，那么把对象里面的值注入到template上下文中
     // 如果是一个函数h()，那么直接render
-
+    setCurrentInstance(instance)
     const setupResult = setup(shallowReadonly(instance.props), {
       emit: instance.emit
     })
 
     handleSetupResult(instance, setupResult)
+    setCurrentInstance(null)
   }
   finishComponentSetup(instance)
 }
@@ -64,4 +65,11 @@ function finishComponentSetup(instance: any) {
   if (instance) {
     instance.render = Component.render
   }
+}
+export let currentInstance = null
+export function getCurrentInstance(){
+  return currentInstance
+}
+function setCurrentInstance(instance: any){
+  currentInstance = instance
 }

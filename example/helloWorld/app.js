@@ -1,4 +1,4 @@
-import { h } from '../../lib/guide-toy-vue3.esm.js'
+import { h, getCurrentInstance } from '../../lib/guide-toy-vue3.esm.js'
 import Foo from './Foo.js'
 
 
@@ -32,6 +32,7 @@ export default {
     // }, this.name)
   },
   setup() {
+    console.log(getCurrentInstance());
     // 返回对象或者h()渲染函数
     return {
       name: 'hi my app'

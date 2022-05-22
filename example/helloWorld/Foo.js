@@ -1,4 +1,4 @@
-import { h } from '../../lib/guide-toy-vue3.esm.js'
+import { h, getCurrentInstance } from '../../lib/guide-toy-vue3.esm.js'
 
 export default {
   name: 'Foo',
@@ -12,5 +12,6 @@ export default {
     // 3. shallow readonly
     props.count++
     console.log(props)
+    console.log('', getCurrentInstance());
   }
 }
