@@ -7,7 +7,7 @@ import { initSlots } from './componentSlots'
 
 export type Data = Record<string, unknown>
 
-export function createComponentInstance(vnode: any) {
+export function createComponentInstance(vnode: any, parent: any) {
   const type = vnode.type
   const instance = {
     vnode,
@@ -17,6 +17,8 @@ export function createComponentInstance(vnode: any) {
     props: {},
     emit: () => {},
     slots: {},
+    provide: {},
+    parent   // 父组件的组件实例
   }
   instance.emit = emit.bind(null, instance) as any
   return instance
