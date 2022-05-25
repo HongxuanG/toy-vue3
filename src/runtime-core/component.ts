@@ -7,7 +7,8 @@ import { initSlots } from './componentSlots'
 
 export type Data = Record<string, unknown>
 
-export function createComponentInstance(vnode: any, parent: any) {
+export function createComponentInstance(vnode: any, parentComponent: any) {
+  console.log('createComponentInstance', parentComponent)
   const type = vnode.type
   const instance = {
     vnode,
@@ -17,8 +18,8 @@ export function createComponentInstance(vnode: any, parent: any) {
     props: {},
     emit: () => {},
     slots: {},
-    provide: {},
-    parent   // 父组件的组件实例
+    provides: parentComponent ? parentComponent.provides : {} as Record<string, any>, // 确保中间层的组件没有提供provide时，子组件拿最近的有provide的组件的数据
+    parent: parentComponent, // 父组件的组件实例
   }
   instance.emit = emit.bind(null, instance) as any
   return instance
