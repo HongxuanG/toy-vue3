@@ -4,7 +4,7 @@ import { Fragment, Text } from './vnode'
 
 export function render(vnode: any, container: any) {
   // 做patch算法
-  patch(vnode, container, undefined)
+  patch(vnode, container, null)
 }
 
 // 例如：
