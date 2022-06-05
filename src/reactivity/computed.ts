@@ -29,10 +29,10 @@ export class ComputedRefImpl<T> {
   }
 }
 
-type ComputedGetter<T> = (...args: any[])=> T
+export type ComputedGetter<T> = (...args: any[])=> T
 // v 是 赋值 = 右边的值
-type ComputedSetter<T> = (v: T) => void
-interface WritableComputedOptions<T> {
+export type ComputedSetter<T> = (v: T) => void
+export interface WritableComputedOptions<T> {
   get: ComputedGetter<T>;
   set: ComputedSetter<T>;
 }

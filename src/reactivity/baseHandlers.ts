@@ -12,7 +12,10 @@ const shallowGet = createGetter(false, true)
 const shallowSet = createSetter(true)
 
 // 高阶函数
-export function createGetter<T extends object>(isReadonly = false, isShallow = false) {
+export function createGetter<T extends object>(
+  isReadonly = false,
+  isShallow = false
+) {
   return function get(target: T, key: string | symbol) {
     // isReactive和isReadonly 都是根据传入的参数 `isReadonly`来决定是否返回true | false的
     if (key === ReactiveFlags.IS_REACTIVE) {
@@ -59,19 +62,34 @@ export const mutableHandlers: ProxyHandler<object> = {
 export const readonlyHandlers: ProxyHandler<object> = {
   get: readonlyGet,
   set(target, key, value) {
-    console.warn(`${JSON.stringify(target)} do not set ${String(key)} value ${value}, because it is readonly`)
+    console.warn(
+      `${JSON.stringify(target)} do not set ${String(
+        key
+      )} value ${value}, because it is readonly`
+    )
     return true
   },
 }
-export const shallowReadonlyHandlers: ProxyHandler<object> = extend({}, readonlyHandlers, {
-  get: shallowReadonlyGet,
-})
-export const shallowReactiveHandlers: ProxyHandler<object> = extend({}, mutableHandlers, {
-  get: shallowGet,
-  set: shallowSet,
-})
-export function createReactiveObject<T extends object>(target: T, handlers: ProxyHandler<T>) {
-  if(!isObject(target)) {
+export const shallowReadonlyHandlers: ProxyHandler<object> = extend(
+  {},
+  readonlyHandlers,
+  {
+    get: shallowReadonlyGet,
+  }
+)
+export const shallowReactiveHandlers: ProxyHandler<object> = extend(
+  {},
+  mutableHandlers,
+  {
+    get: shallowGet,
+    set: shallowSet,
+  }
+)
+export function createReactiveObject<T extends object>(
+  target: T,
+  handlers: ProxyHandler<T>
+) {
+  if (!isObject(target)) {
     console.warn(`target ${target} is not a object`)
     return target
   }

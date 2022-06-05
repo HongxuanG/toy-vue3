@@ -5,6 +5,7 @@ describe('reactivity/computed', () => {
   it('should return updated value', () => {
     const value = reactive({ foo: 1 })
     const cValue = computed(() => value.foo)
+    // return 一个 ref对象
     expect(cValue.value).toBe(1)
   })
 

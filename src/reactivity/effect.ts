@@ -79,7 +79,7 @@ export function track(target: Record<EffectKey, any>, key: EffectKey) {
   trackEffect(dep)
 }
 // 依赖收集
-export function trackEffect(dep: Dep){
+export function trackEffect(dep: Dep) {
   // 避免不必要的add操作
   if (dep.has(activeEffect)) return
   // 将activeEffect实例对象add给deps
@@ -100,7 +100,7 @@ export function trigger(target: Record<EffectKey, any>, key: EffectKey) {
   }
 }
 // 触发依赖
-export function triggerEffect(dep: Dep){
+export function triggerEffect(dep: Dep) {
   for (let effect of dep) {
     if (effect.scheduler) {
       effect.scheduler()
@@ -119,7 +119,10 @@ export interface EffectRunner<T = any> {
   effect: ReactiveEffect
 }
 // 根据官方给出的介绍：effect会立即触发这个函数，同时响应式追踪其依赖
-export function effect<T = any>(fn: () => T, option?: EffectOption): EffectRunner {
+export function effect<T = any>(
+  fn: () => T,
+  option?: EffectOption
+): EffectRunner {
   let _effect = new ReactiveEffect(fn)
   if (option) {
     extend(_effect, option)

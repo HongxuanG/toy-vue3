@@ -1,4 +1,4 @@
-import {Provider} from './app.js'
+import {App} from './app.js'
 import { createApp } from '../../lib/guide-toy-vue3.esm.js'
 
 // 流程：
@@ -6,5 +6,5 @@ import { createApp } from '../../lib/guide-toy-vue3.esm.js'
 
 const rootContainer = document.querySelector('#app')
 
-createApp(Provider).mount(rootContainer)
+createApp(App).mount(rootContainer)
 

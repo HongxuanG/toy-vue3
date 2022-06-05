@@ -16,7 +16,8 @@ export const hasChanged = (newValue: any, value: any) => {
   return !Object.is(newValue, value)
 }
 export const isOn = (key: string) => /^on[A-Z]/.test(key)
-export const hasOwn = (target: Record<string, any>, key: any) => Object.prototype.hasOwnProperty.call(target, key)
+export const hasOwn = (target: Record<string, any>, key: any) =>
+  Object.prototype.hasOwnProperty.call(target, key)
 
 // 把kabobCase => camelCase
 export const camelCase = (str: string) => {

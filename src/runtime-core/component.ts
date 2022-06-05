@@ -1,3 +1,4 @@
+import { proxyRefs } from '../reactivity'
 import { shallowReadonly } from '../reactivity/reactive'
 import { isFunction, isObject } from '../shared'
 import { emit } from './componentEmit'
@@ -18,6 +19,7 @@ export function createComponentInstance(vnode: any, parentComponent: any) {
     props: {},
     emit: () => {},
     slots: {},
+    isMounted: false,
     provides: parentComponent ? parentComponent.provides : {} as Record<string, any>, // 确保中间层的组件没有提供provide时，子组件拿最近的有provide的组件的数据
     parent: parentComponent, // 父组件的组件实例
   }
@@ -57,8 +59,8 @@ function handleSetupResult(instance: any, setupResult: any) {
   if (isFunction(setupResult)) {
     instance.render = setupResult
   } else if (isObject(setupResult)) {
-    // 把setup返回的对象挂载到setupState上
-    instance.setupState = setupResult
+    // 把setup返回的对象挂载到setupState上  proxyRefs对setupResult解包
+    instance.setupState = proxyRefs(setupResult)
   }
 }
 // 结束组件的安装
