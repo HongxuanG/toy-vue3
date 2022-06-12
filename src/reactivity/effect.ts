@@ -136,6 +136,7 @@ export function effect<T = any>(
   runner.effect = _effect
   return runner
 }
+// 删除依赖
 export function stop(runner: EffectRunner) {
   runner.effect.stop()
 }

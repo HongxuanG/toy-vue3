@@ -33,3 +33,4 @@ export const capitalize = (str: string) => {
 export const toHandlerKey = (eventName: string) => {
   return eventName ? 'on' + capitalize(eventName) : ''
 }
+export const EMPTY_OBJ = {}

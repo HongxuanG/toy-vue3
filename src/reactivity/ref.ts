@@ -5,11 +5,14 @@ import { hasChanged, isObject } from '../shared'
 import { Dep } from './effect'
 import { triggerEffect, trackEffect, isTracking } from './effect'
 import { isReactive, reactive } from './reactive'
+export interface Ref<T = any> {
+  value: T
+}
 // 定义一个RefImpl类
 class RefImpl<T> {
   private _value: T
-  public dep?: Dep = undefined
   private _rawValue: T
+  public dep?: Dep = undefined
   public __v_isRef = true // 标识是ref对象
   constructor(value: any) {
     this._value = convert(value)
@@ -43,7 +46,7 @@ function trackRefValue(ref: RefImpl<any>) {
 function convert(value: any) {
   return isObject(value) ? reactive(value) : value
 }
-export function ref<T>(value: T) {
+export function ref<T>(value: T): Ref<T> {
   return new RefImpl(value)
 }
 // 检查值是否为一个 ref 对象。

@@ -1,25 +1,32 @@
 import { createRenderer } from '../runtime-core/renderer'
 import { isFunction, isOn } from '../shared'
 
+// 创建元素
 export function createElement(type: any) {
-  console.log('createElement-----------')
   return document.createElement(type)
 }
-export function patchProp(el: any, key: string, value: any) {
-  console.log('patchProp-----------')
-  if (Array.isArray(value)) {
-    el.setAttribute(key, value.join(' '))
-  } else if (isOn(key) && isFunction(value)) {
+// 处理props
+export function patchProp(el: any, key: string, oldValue: any, newValue: any) {
+  if (Array.isArray(newValue)) {
+    el.setAttribute(key, newValue.join(' '))
+  } else if (isOn(key) && isFunction(newValue)) {
     // 添加事件
-    el.addEventListener(key.slice(2).toLowerCase(), value)
+    el.addEventListener(key.slice(2).toLowerCase(), newValue)
   } else {
-    el.setAttribute(key, value)
+    // props属性的属性值是undefined或者null，删除该属性
+    if (newValue === null || newValue === undefined) {
+      el.removeAttribute(key)
+    } else {
+      el.setAttribute(key, newValue)
+    }
   }
 }
+// 插入元素
 export function insert(el: any, container: any) {
-  console.log('insert-----------')
   container.append(el)
 }
+// 通过对以上函数的抽离，方便实现了自定义渲染器的逻辑
+// 以后想自定义渲染器，传入三个函数即可
 const render = createRenderer({
   createElement,
   patchProp,

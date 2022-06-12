@@ -6,6 +6,7 @@ const publicPropertiesMap: PublicPropertiesMap = {
   $el: (i: any) => i.vnode.el,
   $slots: (i: any) => i.slots
 }
+// render函数的this指向，将会指向setup的返回值
 export const publicInstanceProxyHandlers: ProxyHandler<any> = {
   get({ _: instance }, key: string) {
     const { setupState, props } = instance

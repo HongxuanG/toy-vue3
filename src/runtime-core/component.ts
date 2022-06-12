@@ -20,6 +20,7 @@ export function createComponentInstance(vnode: any, parentComponent: any) {
     emit: () => {},
     slots: {},
     isMounted: false,
+    subTree: {},
     provides: parentComponent ? parentComponent.provides : {} as Record<string, any>, // 确保中间层的组件没有提供provide时，子组件拿最近的有provide的组件的数据
     parent: parentComponent, // 父组件的组件实例
   }
@@ -59,7 +60,7 @@ function handleSetupResult(instance: any, setupResult: any) {
   if (isFunction(setupResult)) {
     instance.render = setupResult
   } else if (isObject(setupResult)) {
-    // 把setup返回的对象挂载到setupState上  proxyRefs对setupResult解包
+    // 把setup返回的对象挂载到setupState上  proxyRefs对setupResult解包（在template上不必书写.value来获取ref值）
     instance.setupState = proxyRefs(setupResult)
   }
 }
