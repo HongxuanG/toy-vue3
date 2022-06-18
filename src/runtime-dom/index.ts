@@ -25,12 +25,25 @@ export function patchProp(el: any, key: string, oldValue: any, newValue: any) {
 export function insert(el: any, container: any) {
   container.append(el)
 }
+// 删除元素
+export function remove(child: HTMLElement){
+  const parent = child.parentNode
+  if(parent){
+    parent.removeChild(child)
+  }
+}
+// 设置元素文本
+export function setElementText(el:HTMLElement, text: string){
+  el.textContent = text
+}
 // 通过对以上函数的抽离，方便实现了自定义渲染器的逻辑
 // 以后想自定义渲染器，传入三个函数即可
 const render = createRenderer({
   createElement,
   patchProp,
   insert,
+  remove,
+  setElementText
 })
 export function createApp(...args: any[]) {
   // @ts-ignore

@@ -8,6 +8,8 @@ interface RendererOptions {
   createElement: (type: string) => any
   patchProp: (el: any, key: string, oldValue: any, newValue: any) => void
   insert: (el: any, container: any) => void
+  remove:(el:any)=>void
+  setElementText:(el:any, text: string)=>void
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -15,6 +17,8 @@ export function createRenderer(options: RendererOptions) {
     createElement: hostCreateElement,
     patchProp: hostPatchProp,
     insert: hostInsert,
+    remove: hostRemove,
+    setElementText: hostSetElementText,
   } = options
 
   function render(vnode: any, container: any) {
@@ -60,7 +64,7 @@ export function createRenderer(options: RendererOptions) {
     mountText(n2, container)
   }
   function processFragment(n2: any, container: any, parentComponent: any) {
-    mountChildren(n2, container, parentComponent)
+    mountChildren(n2.children, container, parentComponent)
   }
   // 处理组件的情况
   function processComponent(vnode: any, container: any, parentComponent: any) {
@@ -76,7 +80,7 @@ export function createRenderer(options: RendererOptions) {
     if (!n1) {
       mountElement(n2, container, parentComponent)
     } else {
-      patchElement(n1, n2, container)
+      patchElement(n1, n2, container, parentComponent)
     }
   }
   // 最后，它把setup()的返回值挂载在组件的instance的setupState上
@@ -98,7 +102,7 @@ export function createRenderer(options: RendererOptions) {
       el.textContent = children
       // 子节点是数组
     } else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-      mountChildren(vnode, el, parentComponent)
+      mountChildren(vnode.children, el, parentComponent)
     }
     let val: any
     // 对vnode的props进行处理，把虚拟属性添加到el
@@ -110,7 +114,12 @@ export function createRenderer(options: RendererOptions) {
     hostInsert(el, container)
   }
   // 对比element
-  function patchElement(n1: any, n2: any, container: any) {
+  function patchElement(
+    n1: any,
+    n2: any,
+    container: any,
+    parentComponent: any
+  ) {
     console.log('patchElement')
     const oldProps = n1.props || EMPTY_OBJ
     const newProps = n2.props || EMPTY_OBJ
@@ -118,7 +127,33 @@ export function createRenderer(options: RendererOptions) {
     // 因为第一次挂载的时候调用patch，走的mountElement，内部给vnode的el赋值了
     // 而往后的patch都不会走mountElement，而是走patchElement，内部并没有给新的vnode的el赋值，所以这里是属于补救的措施。
     const el = (n2.el = n1.el)
+    patchChildren(n1, n2, el, parentComponent)
     patchProps(el, oldProps, newProps)
+  }
+  function patchChildren(n1: any, n2: any, container: any, parentComponent: any) {
+    const prevShapeFlag = n1.shapeFlag
+    const newShapeFlag = n2.shapeFlag
+    const c1 = n1.children
+    const c2 = n2.children
+    if (newShapeFlag & ShapeFlags.TEXT_CHILDREN) {
+      if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+        unmountChildren(container)
+      }
+      if (c1 !== c2) {
+        hostSetElementText(container, c2)
+      }
+    } else {
+      // text to array
+      if (prevShapeFlag & ShapeFlags.TEXT_CHILDREN) {
+        hostSetElementText(container, '')
+        mountChildren(c2, container, parentComponent)
+      }
+    }
+  }
+  function unmountChildren(child:any){
+    for(let i = 0;i < child.length;i++){
+      hostRemove(child[i])
+    }
   }
   // 对比props
   function patchProps(el: any, oldProps: any, newProps: any) {
@@ -149,8 +184,8 @@ export function createRenderer(options: RendererOptions) {
     const textNode = (vnode.el = document.createTextNode(children))
     container.append(textNode)
   }
-  function mountChildren(vnode: any, container: any, parentComponent: any) {
-    vnode.children.forEach((vnode: any) => {
+  function mountChildren(children: any, container: any, parentComponent: any) {
+    children.forEach((vnode: any) => {
       patch(null, vnode, container, parentComponent)
     })
   }
