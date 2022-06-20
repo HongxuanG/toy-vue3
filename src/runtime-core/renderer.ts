@@ -8,8 +8,8 @@ interface RendererOptions {
   createElement: (type: string) => any
   patchProp: (el: any, key: string, oldValue: any, newValue: any) => void
   insert: (el: any, container: any) => void
-  remove:(el:any)=>void
-  setElementText:(el:any, text: string)=>void
+  remove: (el: any) => void
+  setElementText: (el: any, text: string) => void
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -130,7 +130,12 @@ export function createRenderer(options: RendererOptions) {
     patchChildren(n1, n2, el, parentComponent)
     patchProps(el, oldProps, newProps)
   }
-  function patchChildren(n1: any, n2: any, container: any, parentComponent: any) {
+  function patchChildren(
+    n1: any,
+    n2: any,
+    container: any,
+    parentComponent: any
+  ) {
     const prevShapeFlag = n1.shapeFlag
     const newShapeFlag = n2.shapeFlag
     const c1 = n1.children
@@ -147,19 +152,40 @@ export function createRenderer(options: RendererOptions) {
       if (prevShapeFlag & ShapeFlags.TEXT_CHILDREN) {
         hostSetElementText(container, '')
         mountChildren(c2, container, parentComponent)
+      } else {
+        console.log('array to array')
+        patchKeyedChildren(c1, c2,container,parentComponent)
       }
     }
   }
-  function unmountChildren(child:any){
-    for(let i = 0;i < child.length;i++){
+  function patchKeyedChildren(c1: any, c2: any,container:any,parentComponent:any) {
+    let i = 0
+    let e1 = c1.length - 1
+    let e2 = c2.length - 1
+    function isSameVNodeType(n1:any,n2:any){
+      return n1.type === n2.type && n1.key === n2.key
+    }
+    while(i <= e1 && i <= e2){
+      let n1 = c1[i]
+      let n2 = c2[i]
+      if (isSameVNodeType(n1, n2)) {
+        patch(n1, n2, container, parentComponent)
+      } else {
+        break
+      }
+      i++
+    }
+    console.log(i);
+  }
+  function unmountChildren(child: any) {
+    for (let i = 0; i < child.length; i++) {
       hostRemove(child[i])
     }
   }
   // 对比props
   function patchProps(el: any, oldProps: any, newProps: any) {
     // 相同的props没必要比较
-    if(oldProps !== newProps){
-      
+    if (oldProps !== newProps) {
       for (let key in newProps) {
         const newProp = newProps[key]
         const oldProp = oldProps[key]
@@ -168,8 +194,7 @@ export function createRenderer(options: RendererOptions) {
         }
       }
       // 老props是空对象就没必要循环
-      if(oldProps !== EMPTY_OBJ){
-
+      if (oldProps !== EMPTY_OBJ) {
         for (let key in oldProps) {
           // 新的props没有该属性
           if (!(key in newProps)) {

@@ -16,9 +16,9 @@ export const App = {
       // 旧的是文本 新的是数组
       // h(textToArray),
       // 旧的是数组 新的是文本
-      h(arrayToText),
+      // h(arrayToText),
       // 旧的是数组 新的也是数组
-      // h(arrayToArray),
+      h(arrayToArray),
     ])
   },
 }

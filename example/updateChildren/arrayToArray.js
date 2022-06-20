@@ -4,16 +4,16 @@ import { h, ref } from '../../lib/guide-toy-vue3.esm.js'
 // (a b) c
 // (a b) d e
 const prevChildren = [
-  h("p", { key: "A" }, "A"),
-  h("p", { key: "B" }, "B"),
-  h("p", { key: "C" }, "C"),
-];
+  h('p', { key: 'A' }, 'A'),
+  h('p', { key: 'B' }, 'B'),
+  h('p', { key: 'C' }, 'C'),
+]
 const nextChildren = [
-  h("p", { key: "A" }, "A"),
-  h("p", { key: "B" }, "B"),
-  h("p", { key: "D" }, "D"),
-  h("p", { key: "E" }, "E"),
-];
+  h('p', { key: 'A' }, 'A'),
+  h('p', { key: 'B' }, 'B'),
+  h('p', { key: 'D' }, 'D'),
+  h('p', { key: 'E' }, 'E'),
+]
 
 // 2. 右侧的对比
 // a (b c)
@@ -206,20 +206,27 @@ const nextChildren = [
 // ];
 
 export default {
-  name: "PatchChildren",
-  setup() {},
-  render() {
-    return h("div", {}, [
-      h(
-        "button",
-        {
-          onClick: () => {
-            isChange.value = !isChange.value;
-          },
-        },
-        "测试子组件之间的 patch 逻辑"
-      ),
-      h("children", {}, isChange.value === true ? nextChildren : prevChildren),
-    ]);
+  name: 'PatchChildren',
+  setup() {
+    const isChange = ref(false)
+    const test = () => {
+      isChange.value = !isChange.value
+    }
+    return {
+      test,
+      isChange,
+    }
   },
-};
+  render() {
+    return h('div', {}, [
+      h(
+        'button',
+        {
+          onClick: this.test,
+        },
+        '测试子组件之间的 patch 逻辑'
+      ),
+      h('children', {}, this.isChange.value ? nextChildren : prevChildren),
+    ])
+  },
+}
