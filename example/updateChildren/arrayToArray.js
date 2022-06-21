@@ -209,6 +209,7 @@ export default {
   name: 'PatchChildren',
   setup() {
     const isChange = ref(false)
+    window.isChange = isChange
     const test = () => {
       isChange.value = !isChange.value
     }
@@ -222,11 +223,13 @@ export default {
       h(
         'button',
         {
-          onClick: this.test,
+          onClick: () => {
+            isChange.value = !isChange.value
+          },
         },
         '测试子组件之间的 patch 逻辑'
       ),
-      h('children', {}, this.isChange.value ? nextChildren : prevChildren),
+      h('children', {}, isChange.value === true ? nextChildren : prevChildren),
     ])
   },
 }
