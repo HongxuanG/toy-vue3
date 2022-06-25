@@ -21,9 +21,10 @@ export function patchProp(el: any, key: string, oldValue: any, newValue: any) {
     }
   }
 }
-// 插入元素
-export function insert(el: any, container: any) {
-  container.append(el)
+// 插入元素  anchor锚点 插入哪一个位置之前，如果是null则默认插入到最后
+export function insert(child: any, container: any, anchor: any = null) {
+  container.insertBefore(child, anchor)
+  // container.append(el)
 }
 // 删除元素
 export function remove(child: HTMLElement){
