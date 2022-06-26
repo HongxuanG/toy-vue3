@@ -122,14 +122,13 @@ const prevChildren = [
 ];
 
 const nextChildren = [
-  h('p', { key: 'A' }, 'A'),
-  h('p', { key: 'B' }, 'B'),
-  h('p', { key: 'H' }, 'H'),
-  h('p', { key: 'E' }, 'E'),
-  h('p', { key: 'C', id: 'c-next' }, 'C'),
-  h('p', { key: 'F' }, 'F'),
-  h('p', { key: 'G' }, 'G'),
-]
+  h("p", { key: "A" }, "A"),
+  h("p", { key: "B" }, "B"),
+  h("p", { key: "E" }, "E"),
+  h("p", { key: "C", id:"c-next" }, "C"),
+  h("p", { key: "F" }, "F"),
+  h("p", { key: "G" }, "G"),
+];
 
 // 2 移动 (节点存在于新的和老的里面，但是位置变了)
 
