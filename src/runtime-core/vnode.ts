@@ -12,6 +12,7 @@ export function createVNode(type: any, props?: any, children?: any) {
     type,
     props,
     children,
+    component: null,   // 组件实例
     key: props && props.key,
     shapeFlag: getShapeFlag(type),
     el: null,
@@ -21,26 +22,26 @@ export function createVNode(type: any, props?: any, children?: any) {
 }
 // 根据vnode.type标志vnode类型
 function getShapeFlag(type: any) {
-  return isString(type) 
+  return isString(type)
     ? ShapeFlags.ELEMENT
     : isObject(type)
     ? ShapeFlags.STATEFUL_COMPONENT
     : 0
 }
 // 给vnode.shapeFlag追加标识
-function normalizeChildren(vnode: any, children: any){
+function normalizeChildren(vnode: any, children: any) {
   // | 左右两边为0 则为0   可以用于给二进制指定的位数修改成1  例如：0100 | 0001 = 0101
   // 在这里相当于给vnode追加额外的标识
-  if(isString(children)){
+  if (isString(children)) {
     vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN
     // 子级是数组
-  } else if(isArray(children)){
+  } else if (isArray(children)) {
     vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN
   }
   // vnode是组件
-  if(vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT){
+  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
     // 子级是对象
-    if(isObject(children) ){
+    if (isObject(children)) {
       vnode.shapeFlag |= ShapeFlags.SLOTS_CHILDREN
     }
   }
@@ -48,6 +49,6 @@ function normalizeChildren(vnode: any, children: any){
 // 创建文本虚拟节点 为什么需要创建文本虚拟节点？直接填上文本不行吗？h('div',{},[Foo, '我是文本'])
 // 挂载html的时候因为children是数组，必然经过mountChildren的循环，然后patch，单纯填上文本是没办法渲染出来的
 // 因为patch并没有针对纯文本做处理，你只能通过div（或者其他html元素）包裹起来生成一个vnode才行，像这样：h('div',{},[Foo, h('div',{}, '我是文本')])
-export function createTextVNode(text: string){
+export function createTextVNode(text: string) {
   return createVNode(Text, {}, text)
 }

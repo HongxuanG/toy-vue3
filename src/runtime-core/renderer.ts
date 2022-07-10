@@ -60,7 +60,7 @@ export function createRenderer(options: RendererOptions) {
           processElement(n1, n2, container, parentComponent, anchor)
         } else if (n2.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
           // 是一个组件？处理vnode是组件的情况
-          processComponent(n2, container, parentComponent, anchor)
+          processComponent(n1, n2, container, parentComponent, anchor)
         }
         break
       }
@@ -79,13 +79,34 @@ export function createRenderer(options: RendererOptions) {
   }
   // 处理组件的情况
   function processComponent(
-    vnode: any,
+    n1: any,
+    n2: any,
     container: any,
     parentComponent: any,
     anchor: any
   ) {
-    mountComponent(vnode, container, parentComponent, anchor)
+    if (!n1) {
+      mountComponent(n2, container, parentComponent, anchor)
+    } else {
+      updateComponent(n1, n2, container, parentComponent, anchor)
+    }
   }
+  function updateComponent(
+    n1: any,
+    n2: any,
+    container: any,
+    parentComponent: any,
+    anchor: any
+    ) {
+      // n1 和 n2 都是组件类型的vnode节点
+    console.log('旧节点',n1);
+    console.log('新节点',n2);
+    // n1.component 在mountComponent的时候已经被赋值了。
+    const instance = (n2.component = n1.component)
+    instance.next = n2
+    // 手动触发 effect
+    instance.update()
+  } 
   // 处理元素的情况
   function processElement(
     n1: any,
@@ -108,7 +129,11 @@ export function createRenderer(options: RendererOptions) {
     parentComponent: any,
     anchor: any
   ) {
-    const instance = createComponentInstance(vnode, parentComponent)
+    // 创建组件实例的时候 也给 vnode的component 赋值 在updateComponent的时候需要拿到组件实例
+    const instance = (vnode.component = createComponentInstance(
+      vnode,
+      parentComponent
+    ))
     // 安装组件
     setupComponent(instance)
 
@@ -182,6 +207,7 @@ export function createRenderer(options: RendererOptions) {
         hostSetElementText(container, '')
         mountChildren(c2, container, parentComponent, anchor)
       } else {
+        // 处理子节点和子节点之间，这里面就是diff算法了
         console.log('array to array')
         patchKeyedChildren(c1, c2, container, parentComponent, anchor)
       }
@@ -310,7 +336,9 @@ export function createRenderer(options: RendererOptions) {
         }
       }
       // 根据映射表生成最长递增子序列
-      const increasingNewIndexSequence = moved ? getSequence(newIndexToOldIndexMap) : []
+      const increasingNewIndexSequence = moved
+        ? getSequence(newIndexToOldIndexMap)
+        : []
       // let j = 0  // 指针
       // for (let i = 0; i < toBePatched; i++) {
       //   if (i !== increasingNewIndexSequence[j]) {
@@ -324,15 +352,14 @@ export function createRenderer(options: RendererOptions) {
       // looping backwards so that we can use last patched node as anchor
       //
       let j = increasingNewIndexSequence.length - 1 // 指针
-      for (let i = toBePatched - 1; i >= 0 ; i--) {
+      for (let i = toBePatched - 1; i >= 0; i--) {
         const nextIndex = i + s2
         const nextChild = c2[nextIndex]
         const anchor = nextIndex + 1 < l2 ? c2[nextIndex + 1].el : null // 防止nextIndex + 1超出l2范围
         // 新增节点
-        if(newIndexToOldIndexMap[i] === 0){
-          patch(null, nextChild, container, parentComponent,anchor)
-        }else if(moved){
-
+        if (newIndexToOldIndexMap[i] === 0) {
+          patch(null, nextChild, container, parentComponent, anchor)
+        } else if (moved) {
           // j < 0 也是考虑到性能优化（increasingNewIndexSequence[-1]已经不存在了）
           if (j < 0 || i !== increasingNewIndexSequence[j]) {
             console.log('需要移动')
@@ -393,7 +420,7 @@ export function createRenderer(options: RendererOptions) {
     container: any,
     anchor: any
   ) {
-    effect(() => {
+    instance.update = effect(() => {
       // 通过一个变量isMounted区分是初始化还是更新
       if (!instance.isMounted) {
         // 这个render()已经在finishComponentSetup处理过了，就是 instance.type.render() 特殊对象的render()
@@ -408,12 +435,34 @@ export function createRenderer(options: RendererOptions) {
         instance.isMounted = true
       } else {
         console.log('updated')
+        
+        // TODO：更新组件el和props
+        // 需要获取新的vnode
+        const {next, vnode} = instance
+        if(next){
+          next.el = vnode.el
+          updateComponentPreRender(instance, next)
+        }
+
+
         const subTree = instance.render.call(instance.proxy)
+
+
+
         const prevSubTree = instance.subTree
         instance.subTree = subTree
         patch(prevSubTree, subTree, container, instance, anchor)
       }
     })
+  }
+  // 用于更新组件
+  function updateComponentPreRender(instance: any, nextVNode: any){
+    // 替换到老的vnode
+    instance.vnode = nextVNode
+    // 新的vnode初始化为null
+    instance.next = null
+    // 更新props
+    instance.props = nextVNode.props
   }
   return {
     createApp: createAppAPI(render),
