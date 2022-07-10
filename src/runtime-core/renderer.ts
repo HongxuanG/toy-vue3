@@ -1,7 +1,8 @@
 import { effect } from '../reactivity'
-import { ShapeFlags, EMPTY_OBJ } from '../shared'
+import { EMPTY_OBJ, ShapeFlags } from '../shared'
 import { createAppAPI } from './apiCreateApp'
 import { createComponentInstance, setupComponent } from './component'
+import { shouldUpdateComponent } from './componentRenderUtils'
 import { Fragment, Text } from './vnode'
 
 interface RendererOptions {
@@ -99,14 +100,23 @@ export function createRenderer(options: RendererOptions) {
     anchor: any
     ) {
       // n1 和 n2 都是组件类型的vnode节点
-    console.log('旧节点',n1);
-    console.log('新节点',n2);
-    // n1.component 在mountComponent的时候已经被赋值了。
-    const instance = (n2.component = n1.component)
-    instance.next = n2
-    // 手动触发 effect
-    instance.update()
-  } 
+      // n1.component 在mountComponent的时候已经被赋值了。
+      const instance = (n2.component = n1.component)
+      console.log('旧节点', n1)
+      console.log('新节点', n2)
+      // 优化：判断新节点和旧节点是否在props上有更改，如果有就执行update，否则跳过
+      if (shouldUpdateComponent(n1, n2)) {
+        console.log('执行update');
+        instance.next = n2
+        // 手动触发 effect
+        instance.update()
+      } else {
+        console.log('跳过不执行');
+        n2.el = n1.el
+        instance.vnode = n2
+      }
+
+    } 
   // 处理元素的情况
   function processElement(
     n1: any,
