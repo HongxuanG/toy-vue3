@@ -3,6 +3,7 @@ import { EMPTY_OBJ, ShapeFlags } from '../shared'
 import { createAppAPI } from './apiCreateApp'
 import { createComponentInstance, setupComponent } from './component'
 import { shouldUpdateComponent } from './componentRenderUtils'
+import { queueJobs } from './scheduler'
 import { Fragment, Text } from './vnode'
 
 interface RendererOptions {
@@ -111,7 +112,7 @@ export function createRenderer(options: RendererOptions) {
         // 手动触发 effect
         instance.update()
       } else {
-        console.log('跳过不执行');
+        console.log('跳过不执行update')
         n2.el = n1.el
         instance.vnode = n2
       }
@@ -462,6 +463,11 @@ export function createRenderer(options: RendererOptions) {
         const prevSubTree = instance.subTree
         instance.subTree = subTree
         patch(prevSubTree, subTree, container, instance, anchor)
+      }
+    },{
+      scheduler(){
+        // 得益于 effect 的 scheduler 我们就可以实现异步更新dom了
+        queueJobs(instance.update)
       }
     })
   }
