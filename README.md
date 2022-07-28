@@ -50,9 +50,9 @@ runtime-core部分
 - [x] 实现 Fragment 和 Text 类型节点  
 - [x] 实现 getCurrentInstance
 - [x] 实现 provide-inject 功能
-- [ ] 实现自定义渲染器 custom renderer
-- [ ] 更新 element 流程搭建
-- [ ] 更新 element 的 props
-- [ ] 更新 element 的 children
-- [ ] 更新 element 的双端对比 diff 算法
-- [ ] 实现组件更新功能
+- [X] 实现自定义渲染器 custom renderer
+- [X] 更新 element 流程搭建
+- [X] 更新 element 的 props
+- [X] 更新 element 的 children
+- [X] 更新 element 的双端对比 diff 算法
+- [X] 实现组件更新功能
